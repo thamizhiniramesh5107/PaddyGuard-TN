@@ -1,0 +1,46 @@
+.venv/
+__pycache__/
+*.py[cod]
+*.sqlite3
+.env
+frontend/node_modules/
+frontend/dist/
+artifacts/*.pt
+artifacts/*.pth
+data/
+paddy-disease-classification/
+paddy_disease_classification/
+train_images/
+test_images/
+*.onnx
+.vercel/
+
+# Environment variables and secrets
+.env*
+!.env.example
+!frontend/.env.production.example
+
+# Dataset folders
+dataset/
+datasets/
+test_images/
+train_images/
+
+# Model files
+*.pt
+*.pth
+*.onnx
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Python virtual environments
+venv/
+env/
+
+# Build and deployment files
+frontend/node_modules/
+frontend/dist/
+.vercel/

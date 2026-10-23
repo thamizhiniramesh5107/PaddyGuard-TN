@@ -1,0 +1,12 @@
+{
+  "blast": {"en":"Rice blast","ta":"நெல் குலைநோய்","type":"disease"},
+  "brown_spot": {"en":"Rice brown spot","ta":"நெல் பழுப்பு புள்ளி நோய்","type":"disease"},
+  "bacterial_leaf_blight": {"en":"Bacterial leaf blight","ta":"நெல் பாக்டீரியா இலைக்கருகல் நோய்","type":"disease"},
+  "bacterial_leaf_streak": {"en":"Bacterial leaf streak","ta":"நெல் பாக்டீரியா இலைக் கோடு நோய்","type":"provisional"},
+  "bacterial_panicle_blight": {"en":"Bacterial panicle blight","ta":"நெல் கதிர் பாக்டீரியா பாதிப்பு","type":"provisional"},
+  "dead_heart": {"en":"Dead heart symptom","ta":"நெல் நடுக்குருத்து காய்தல் அறிகுறி","type":"symptom"},
+  "downy_mildew": {"en":"Downy mildew (verify label)","ta":"டவுனி மில்டியூ (வகுப்பைச் சரிபார்க்கவும்)","type":"provisional"},
+  "hispa": {"en":"Rice hispa damage","ta":"நெல் ஹிஸ்பா வண்டு சேதம்","type":"pest_damage"},
+  "normal": {"en":"Healthy / no target symptom detected","ta":"ஆரோக்கியமானது / குறிக்கப்பட்ட அறிகுறி இல்லை","type":"healthy"},
+  "tungro": {"en":"Rice tungro","ta":"நெல் துங்ரோ நோய்","type":"viral_disease"}
+}

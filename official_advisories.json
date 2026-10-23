@@ -1,0 +1,47 @@
+{
+  "blast": {
+    "label_en": "TNAU source summary",
+    "label_ta": "TNAU ஆதாரச் சுருக்கம்",
+    "symptoms_en": "Blast may affect leaves, nodes and panicles. Leaf lesions are spindle-shaped with a grey centre and darker margin.",
+    "symptoms_ta": "குலைநோய் இலைகள், கணுக்கள் மற்றும் கதிர்களைப் பாதிக்கலாம். இலைப் புள்ளிகள் சாம்பல் மையமும் கருமையான விளிம்பும் கொண்ட நீள்வட்ட வடிவில் இருக்கலாம்.",
+    "guidance_en": "Avoid excess nitrogen and use split nitrogen application. Remove weed hosts around bunds. Confirm symptoms with a local extension officer.",
+    "guidance_ta": "அதிக நைட்ரஜனைத் தவிர்த்து, நைட்ரஜன் உரத்தைப் பிரித்து இடவும். வரப்புகளிலுள்ள களைகளை அகற்றவும். உள்ளூர் வேளாண் அலுவலரிடம் அறிகுறிகளை உறுதிப்படுத்தவும்.",
+    "sources": [{"name":"TNAU ICT-AAS Paddy: Blast","url":"https://www.agritech.tnau.ac.in/govt_schemes_services/aas/paddy.html"},{"name":"TNAU Crop Protection: Rice blast","url":"https://agritech.tnau.ac.in/crop_protection/rice_diseases/rice_1.html"}]
+  },
+  "brown_spot": {
+    "label_en": "TNAU source summary",
+    "label_ta": "TNAU ஆதாரச் சுருக்கம்",
+    "symptoms_en": "Brown spot can produce round-to-oval brown lesions on leaves and may also affect grain. Nutrient stress and water stress can be associated with disease severity.",
+    "symptoms_ta": "பழுப்பு புள்ளி நோயில் இலைகளில் வட்டம் அல்லது நீள்வட்ட வடிவ பழுப்பு புள்ளிகள் தோன்றலாம்; தானியங்களும் பாதிக்கப்படலாம். ஊட்டச்சத்து மற்றும் நீர் அழுத்தம் நோயின் தீவிரத்துடன் தொடர்புடையதாக இருக்கலாம்.",
+    "guidance_en": "Use healthy seed, maintain balanced crop nutrition and avoid water stress. Seek local confirmation before treatment.",
+    "guidance_ta": "நோயற்ற விதைகளைப் பயன்படுத்தி, சமநிலையான பயிர் ஊட்டச்சத்தைப் பராமரித்து, நீர் அழுத்தத்தைத் தவிர்க்கவும். சிகிச்சைக்கு முன் உள்ளூர் நிபுணரிடம் உறுதிப்படுத்தவும்.",
+    "sources": [{"name":"TNAU Crop Protection: Brown spot","url":"https://agritech.tnau.ac.in/expert_system/paddy/cpdisbrownspot.html"}]
+  },
+  "bacterial_leaf_blight": {
+    "label_en": "TNAU source summary",
+    "label_ta": "TNAU ஆதாரச் சுருக்கம்",
+    "symptoms_en": "Bacterial leaf blight may begin as water-soaked to yellow streaks at leaf tips or margins. Similar symptoms require field confirmation.",
+    "symptoms_ta": "பாக்டீரியா இலைக்கருகல் இலை நுனி அல்லது ஓரத்தில் நீர் நனைந்தது போன்ற மஞ்சள் கோடுகளாகத் தொடங்கலாம். இதே போன்ற அறிகுறிகளை வயலில் உறுதிப்படுத்த வேண்டும்.",
+    "guidance_en": "Use tolerant varieties where suitable and maintain field sanitation. Confirm diagnosis and current control measures with the local extension service.",
+    "guidance_ta": "பொருத்தமான இடங்களில் தாங்குதிறன் கொண்ட ரகங்களைப் பயன்படுத்தி வயல் சுத்தத்தைப் பராமரிக்கவும். நோயறிதலையும் தற்போதைய கட்டுப்பாட்டு முறைகளையும் உள்ளூர் வேளாண் சேவையிடம் உறுதிப்படுத்தவும்.",
+    "sources": [{"name":"TNAU Crop Protection: Bacterial leaf blight","url":"https://agritech.tnau.ac.in/expert_system/paddy/cpdisblb.html"}]
+  },
+  "bacterial_leaf_streak": {
+    "label_en": "TNAU source summary — verify dataset label",
+    "label_ta": "TNAU ஆதாரச் சுருக்கம் — தரவுத்தொகுப்பு வகுப்பைச் சரிபார்க்கவும்",
+    "symptoms_en": "Bacterial leaf streak can cause narrow streaking. The image class label is provisional and should be confirmed against the dataset documentation.",
+    "symptoms_ta": "பாக்டீரியா இலைக் கோடு நோயில் மெல்லிய கோடுகள் தோன்றலாம். இந்தப் பட வகுப்பு தற்காலிகமானது; தரவுத்தொகுப்பு ஆவணத்துடன் ஒப்பிட்டு உறுதிப்படுத்த வேண்டும்.",
+    "guidance_en": "Maintain field sanitation and use balanced fertilizer and proper plant spacing. Confirm the label and diagnosis before acting.",
+    "guidance_ta": "வயல் சுத்தத்தைப் பராமரித்து, சமநிலை உரமிடல் மற்றும் சரியான செடி இடைவெளியைப் பின்பற்றவும். நடவடிக்கை எடுப்பதற்கு முன் வகுப்பையும் நோயறிதலையும் உறுதிப்படுத்தவும்.",
+    "sources": [{"name":"TNAU Crop Protection: Bacterial leaf streak","url":"https://agritech.tnau.ac.in/expert_system/paddy/cpdisbls.html"}]
+  },
+  "tungro": {
+    "label_en": "TNAU source summary",
+    "label_ta": "TNAU ஆதாரச் சுருக்கம்",
+    "symptoms_en": "Tungro may cause stunting, reduced tillering and yellow-to-orange leaves. Symptoms can overlap with other crop problems.",
+    "symptoms_ta": "துங்ரோ நோயில் வளர்ச்சி குன்றுதல், தூர்கள் குறைதல், இலைகள் மஞ்சள் அல்லது ஆரஞ்சு நிறமாதல் ஏற்படலாம். பிற பயிர் பிரச்சினைகளுடனும் அறிகுறிகள் ஒத்திருக்கலாம்.",
+    "guidance_en": "Monitor leafhopper vectors and consult local extension guidance. Tungro is viral; do not treat the image result as a confirmed diagnosis or pesticide prescription.",
+    "guidance_ta": "இலைத்தத்துப்பூச்சி கடத்திகளை கண்காணித்து உள்ளூர் வேளாண் வழிகாட்டுதலைப் பெறவும். துங்ரோ வைரஸ் நோய்; பட முடிவை உறுதிப்படுத்தப்பட்ட நோயறிதலாகவோ பூச்சிக்கொல்லி மருந்தளவாகவோ கருத வேண்டாம்.",
+    "sources": [{"name":"TNAU Crop Protection: Tungro","url":"https://agritech.tnau.ac.in/expert_system/paddy/cpdistungro.html"}]
+  }
+}

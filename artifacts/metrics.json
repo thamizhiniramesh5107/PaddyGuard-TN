@@ -1,0 +1,228 @@
+{
+  "architecture": "MobileNetV3-Small",
+  "evaluation_split": "deterministic stratified held-out 15% of labeled training data; unlabeled competition test_images excluded",
+  "test_samples": 1550,
+  "accuracy": 0.727741935483871,
+  "precision_macro": 0.7228410212012408,
+  "recall_macro": 0.7413248378079192,
+  "f1_macro": 0.7273761401532102,
+  "per_class": {
+    "bacterial_leaf_blight": {
+      "precision": 0.5319148936170213,
+      "recall": 0.704225352112676,
+      "f1-score": 0.6060606060606061,
+      "support": 71.0
+    },
+    "bacterial_leaf_streak": {
+      "precision": 0.7222222222222222,
+      "recall": 0.9122807017543859,
+      "f1-score": 0.8062015503875969,
+      "support": 57.0
+    },
+    "bacterial_panicle_blight": {
+      "precision": 0.8958333333333334,
+      "recall": 0.8431372549019608,
+      "f1-score": 0.8686868686868687,
+      "support": 51.0
+    },
+    "blast": {
+      "precision": 0.7469879518072289,
+      "recall": 0.7181467181467182,
+      "f1-score": 0.7322834645669292,
+      "support": 259.0
+    },
+    "brown_spot": {
+      "precision": 0.6592592592592592,
+      "recall": 0.6223776223776224,
+      "f1-score": 0.6402877697841727,
+      "support": 143.0
+    },
+    "dead_heart": {
+      "precision": 0.9230769230769231,
+      "recall": 0.7850467289719626,
+      "f1-score": 0.8484848484848485,
+      "support": 214.0
+    },
+    "downy_mildew": {
+      "precision": 0.61,
+      "recall": 0.6559139784946236,
+      "f1-score": 0.6321243523316062,
+      "support": 93.0
+    },
+    "hispa": {
+      "precision": 0.6846473029045643,
+      "recall": 0.6932773109243697,
+      "f1-score": 0.6889352818371608,
+      "support": 238.0
+    },
+    "normal": {
+      "precision": 0.8823529411764706,
+      "recall": 0.7442748091603053,
+      "f1-score": 0.8074534161490683,
+      "support": 262.0
+    },
+    "tungro": {
+      "precision": 0.5721153846153846,
+      "recall": 0.7345679012345679,
+      "f1-score": 0.6432432432432432,
+      "support": 162.0
+    },
+    "accuracy": 0.727741935483871,
+    "macro avg": {
+      "precision": 0.7228410212012408,
+      "recall": 0.7413248378079192,
+      "f1-score": 0.7273761401532102,
+      "support": 1550.0
+    },
+    "weighted avg": {
+      "precision": 0.744153393697611,
+      "recall": 0.727741935483871,
+      "f1-score": 0.7319983935249678,
+      "support": 1550.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      50,
+      3,
+      0,
+      1,
+      5,
+      1,
+      2,
+      0,
+      3,
+      6
+    ],
+    [
+      0,
+      52,
+      0,
+      0,
+      2,
+      1,
+      0,
+      0,
+      0,
+      2
+    ],
+    [
+      0,
+      0,
+      43,
+      2,
+      0,
+      5,
+      0,
+      0,
+      0,
+      1
+    ],
+    [
+      6,
+      4,
+      0,
+      186,
+      8,
+      1,
+      7,
+      13,
+      4,
+      30
+    ],
+    [
+      5,
+      3,
+      0,
+      15,
+      89,
+      0,
+      9,
+      12,
+      1,
+      9
+    ],
+    [
+      7,
+      0,
+      1,
+      14,
+      3,
+      168,
+      4,
+      5,
+      3,
+      9
+    ],
+    [
+      6,
+      1,
+      0,
+      4,
+      4,
+      0,
+      61,
+      11,
+      1,
+      5
+    ],
+    [
+      6,
+      3,
+      0,
+      13,
+      16,
+      1,
+      10,
+      165,
+      10,
+      14
+    ],
+    [
+      7,
+      6,
+      4,
+      1,
+      5,
+      4,
+      2,
+      25,
+      195,
+      13
+    ],
+    [
+      7,
+      0,
+      0,
+      13,
+      3,
+      1,
+      5,
+      10,
+      4,
+      119
+    ]
+  ],
+  "classes": [
+    "bacterial_leaf_blight",
+    "bacterial_leaf_streak",
+    "bacterial_panicle_blight",
+    "blast",
+    "brown_spot",
+    "dead_heart",
+    "downy_mildew",
+    "hispa",
+    "normal",
+    "tungro"
+  ],
+  "split_counts": {
+    "train": 7233,
+    "validation": 1550,
+    "test": 1550
+  },
+  "duplicates_removed": 74,
+  "seed": 42,
+  "checkpoint": "artifacts\\paddyguard.pt",
+  "best_epoch": 3,
+  "best_validation_accuracy": 0.7581
+}
