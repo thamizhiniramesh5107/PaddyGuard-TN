@@ -126,6 +126,7 @@ def history(limit=20):
 def severity(image: Image.Image):
     # Approximate color segmentation bounded by the dominant leaf-shaped region.
     import cv2
+    cv2.setNumThreads(max(1, int(os.getenv('OPENCV_FOR_THREADS_NUM', '1'))))
     rgb = np.asarray(image.convert('RGB').resize((480, 480)))
     hsv = cv2.cvtColor(rgb, cv2.COLOR_RGB2HSV)
     green = ((hsv[:,:,0] >= 20) & (hsv[:,:,0] <= 100) & (hsv[:,:,1] >= 24) & (hsv[:,:,2] >= 30)).astype(np.uint8)

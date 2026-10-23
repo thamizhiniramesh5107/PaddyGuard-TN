@@ -1,78 +1,95 @@
-# Public deployment: Vercel + Render
+# Free-tier deployment options
 
-This repository is prepared for a Vercel static frontend and a Render FastAPI service. Publishing is not performed from this workspace because it requires your GitHub, Vercel, and Render account authorization and (for the recommended Render plan) billing approval. Deployment is **not live** until you complete the account steps below and verify the URLs.
+The project has a small MobileNetV3-Small checkpoint (6,234,821 bytes; SHA-256 `5acce83e74552321e01a5dceb962f69441919a18885006cbb77cbdc9e900b93f`). The backend loads one CPU model, uses one Uvicorn worker, runs batch-one inference under `torch.inference_mode()`, and limits Torch/OpenMP/OpenBLAS/OpenCV threads to one. A local Windows process measurement recorded 316.3 MiB peak working set after importing FastAPI/PyTorch, loading the checkpoint, estimating severity, and running inference. Render Free has 512 MiB RAM and only 0.1 CPU, so this leaves about 196 MiB measured headroom locally. Linux and hosting overhead differ; this is a plausible fit, not a verified production guarantee. The 0.1 CPU can make cold starts and predictions slow.
 
-## 1. Keep data and weights out of Git
+Render Free is now selected in `render.yaml` as requested. Its instance sleeps after 15 minutes without inbound traffic, can take about a minute to wake, and has an ephemeral filesystem. SQLite history is therefore disposable on restart/sleep/redeploy. Use Supabase for history that must persist. Render's free-plan limits and memory allocation are documented at [Render Free](https://render.com/docs/free) and [Render Compute Plans](https://render.com/docs/compute-plans).
 
-The root `.gitignore` excludes the dataset directories, SQLite database, virtual environment, frontend build output, and `artifacts/*.pt`. The small `artifacts/metrics.json` evaluation report stays trackable. The trained checkpoint is about 6 MB and is downloaded by Render over HTTPS; its SHA-256 is verified before PyTorch loads it.
+For a more dependable free-quota deployment with additional memory, this repository also includes a Dockerfile for Google Cloud Run. Configure 1 vCPU, 1 GiB RAM, concurrency 1 and maximum instances 1. Cloud Run has an always-free request-based allowance (currently 180,000 vCPU-seconds, 360,000 GiB-seconds and 2 million requests/month), but [Google requires a billing account](https://docs.cloud.google.com/free/docs/free-cloud-features?hl=en) and charges usage exceeding the allowance; set a budget alert and confirm the current pricing first. This is free only while usage stays within quota. See [Cloud Run pricing](https://cloud.google.com/run/pricing) and [service memory settings](https://cloud.google.com/run/docs/configuring/services/memory-limits).
 
-Open PowerShell in the project folder. If this folder is not already a Git repository, initialize it once:
+## 1. Prepare GitHub without datasets or model weights
+
+From PowerShell in the project root:
 
 ```powershell
-git init -b main
 git status --short
 git add .
 git status --short
 ```
 
-Confirm that neither `paddy-disease-classification/`, `artifacts/paddyguard.pt`, `.venv/`, nor `paddyguard.sqlite3` appears in the staged file list. Then create an **empty** repository in GitHub (private or public), and push:
+Check that your dataset folders, `.venv`, `paddyguard.sqlite3`, and `artifacts/paddyguard.pt` are not staged. `.gitignore` and `.dockerignore` exclude these large/local artifacts. If this is a new Git repository, create an empty GitHub repository and push:
 
 ```powershell
-git commit -m "Prepare PaddyGuard-TN for deployment"
+git init -b main
+git add .
+git commit -m "Prepare PaddyGuard-TN deployment"
 git remote add origin https://github.com/YOUR-GITHUB-NAME/paddyguard-tn.git
 git push -u origin main
 ```
 
-If the project is already a Git repository, skip `git init` and add the GitHub remote only if it does not already exist. GitHub login/authorization is required for the push.
+Skip `git init` if this folder already has a repository. GitHub authentication is required to push.
 
-## 2. Publish the model artifact for startup download
+## 2. Host the trained model artifact
 
-In GitHub, create a release with tag `paddyguard-model-v1` and attach the local file `artifacts/paddyguard.pt` as a release asset. The checkpoint is a model artifact, not source or a dataset; do not `git add -f` it. For a public release, set Render's `MODEL_URL` to:
+The model is not committed to source control. Create a GitHub release with tag `paddyguard-model-v1` and attach `artifacts/paddyguard.pt`. For a public release, its direct download URL follows this pattern:
 
 ```text
 https://github.com/YOUR-GITHUB-NAME/paddyguard-tn/releases/download/paddyguard-model-v1/paddyguard.pt
 ```
 
-The current checkpoint SHA-256 is:
+The SHA-256 for the current checkpoint is:
 
 ```text
 5acce83e74552321e01a5dceb962f69441919a18885006cbb77cbdc9e900b93f
 ```
 
-`render.yaml` already carries this checksum. If you retrain or replace the checkpoint, calculate its new hash with:
+The backend downloads only over HTTPS and verifies the full SHA-256 before loading. After replacing/retraining the checkpoint, calculate the new digest:
 
 ```powershell
 (Get-FileHash .\artifacts\paddyguard.pt -Algorithm SHA256).Hash.ToLower()
 ```
 
-Update Render's `MODEL_SHA256` to that value before redeploying. For a private GitHub release, use the GitHub release asset API URL (`https://api.github.com/repos/OWNER/REPO/releases/assets/ASSET_ID`) for `MODEL_URL`, provide a read-only GitHub token in Render's secret `MODEL_DOWNLOAD_TOKEN`, and keep `MODEL_SHA256` set. Never put that token in Vercel or a `VITE_` variable. The API refuses non-HTTPS model URLs and hash mismatches; `/readyz` stays unavailable if the checkpoint cannot be downloaded or loaded.
+Update the `MODEL_SHA256` setting on the host. For private storage, set `MODEL_URL` and `MODEL_DOWNLOAD_TOKEN` as backend-only secrets; never expose the token in a `VITE_` variable.
 
-## 3. Deploy the frontend to Vercel
+## 3. Deploy the backend on Render Free (best-effort)
 
-1. Sign in to Vercel and import the GitHub repository. Grant Vercel access to that repository.
-2. Set **Root Directory** to `frontend` and keep **Framework Preset** as Vite.
-3. Use Node.js `22.x` (the project pins Vite-compatible tooling in `frontend/.nvmrc`), build command `npm run build`, and output directory `dist`.
-4. Add the production environment variable `VITE_API_BASE_URL` with a temporary value `https://RENDER-SERVICE-NAME.onrender.com/api`. Replace it with the actual Render service URL after step 4, then redeploy. Vite embeds this value at build time; changing it requires a new deployment.
-5. Deploy and note the production origin, for example `https://paddyguard-tn.vercel.app`. Do not use a preview URL as the only allowed origin if you also need production.
+1. In Render, create a Blueprint using the GitHub repository. Review `render.yaml`; it selects the `free` plan, Python 3.11, one Uvicorn worker and `/readyz`.
+2. Set `MODEL_URL` to the release download URL. Keep the configured SHA-256, and set `CORS_ORIGINS` to the exact Vercel site origin (for example `https://paddyguard-tn.vercel.app`, no trailing slash). Set `MODEL_DOWNLOAD_TOKEN` only for private model hosting.
+3. If prediction history must survive Render restarts, configure Supabase by setting `SUPABASE_URL` and `SUPABASE_SERVICE_KEY` in Render. Otherwise the default SQLite database is under `/tmp` and history is temporary.
+4. Wait for deployment. Check `https://YOUR-RENDER-SERVICE.onrender.com/healthz` and `/readyz`. `/readyz` must return 200 with `model: ready`; `/api/health` should report `model_ready: true`.
 
-`frontend/vercel.json` provides SPA fallback routing. API requests go directly to the Render URL; the Vite development proxy remains `/api` → `localhost:8000` for local development.
+The API never substitutes a placeholder prediction when the model cannot load. It returns unavailable/not-ready instead. If Render Free repeatedly fails readiness, restarts due to memory, or is too slow, use Cloud Run below rather than lowering confidence rules or faking results.
 
-## 4. Deploy the backend to Render
+## 4. Deploy the backend on Google Cloud Run free quota (recommended for more memory)
 
-1. In Render, create a **Blueprint** from the same GitHub repository and review `render.yaml` before applying it.
-2. The Blueprint uses Python 3.11, installs the CPU-only PyTorch wheels, starts one Uvicorn worker, and checks `/readyz`. One worker avoids duplicating PyTorch memory.
-3. Enter the `MODEL_URL` from step 2 and set `CORS_ORIGINS` to the exact Vercel origin from step 3, without a trailing slash. Multiple allowed origins can be comma-separated (for example production and preview domains).
-4. If using Supabase, set both `SUPABASE_URL` and `SUPABASE_SERVICE_KEY` in Render only. Create the `paddyguard_predictions` table using the SQL in the project README. Never expose the service key in Vercel. If Supabase is not configured, the Blueprint uses SQLite under `/tmp`; that is suitable only for a demo because Render's ephemeral filesystem can be reset on restart/redeploy.
-5. Review the compute plan and approve the cost in Render. The Blueprint selects Render's legacy `standard` plan (1 CPU, 2 GB RAM) because the PyTorch backend is not a reliable fit for the 512 MB free service. Render currently maps this plan to `1c-2g`; check current billing before you approve it.
-6. Wait for the deploy and confirm Render logs show successful model initialization. Test `https://RENDER-SERVICE-NAME.onrender.com/healthz`, then `/readyz` and `/api/health`. `/readyz` must return HTTP 200 with `model: ready` before connecting the website.
+This option requires a Google account, a Google Cloud project, an enabled billing account, and the `gcloud` CLI. Usage is free only inside the monthly allowance; configure a billing budget alert. Choose the `asia-south1` Mumbai region when available.
 
-The model is downloaded into `/tmp/paddyguard.pt` at startup and checksum-verified. The artifact is small, so restarts may download it again. You can change `MODEL_PATH` to a mounted persistent disk if you configure one, but a disk is not required for model startup.
+1. Push the source to GitHub and publish the model release as above. Install and authenticate the Google Cloud CLI, select your project, and enable billing/Cloud Run APIs if prompted.
+2. From the project root, deploy the Dockerfile (datasets and weights are excluded from its build context):
 
-## 5. Connect and verify the public website
+```powershell
+gcloud run deploy paddyguard-api `
+  --source . `
+  --project YOUR-GCP-PROJECT-ID `
+  --region asia-south1 `
+  --allow-unauthenticated `
+  --memory 1Gi `
+  --cpu 1 `
+  --concurrency 1 `
+  --max 1 `
+  --min 0 `
+  --timeout 300 `
+  --set-env-vars "APP_ENV=production,MODEL_PATH=/tmp/paddyguard.pt,MODEL_URL=https://github.com/YOUR-GITHUB-NAME/paddyguard-tn/releases/download/paddyguard-model-v1/paddyguard.pt,MODEL_SHA256=5acce83e74552321e01a5dceb962f69441919a18885006cbb77cbdc9e900b93f,DATABASE_PATH=/tmp/paddyguard.sqlite3,TORCH_NUM_THREADS=1,OMP_NUM_THREADS=1,MKL_NUM_THREADS=1,OPENBLAS_NUM_THREADS=1,OPENCV_FOR_THREADS_NUM=1,ABSTAIN_THRESHOLD=0.55,CORS_ORIGINS=https://YOUR-VERCEL-SITE.vercel.app"
+```
 
-1. In Vercel → Project → Settings → Environment Variables, set `VITE_API_BASE_URL` to the exact Render base URL plus `/api`, for example `https://paddyguard-api.onrender.com/api`.
-2. Redeploy the Vercel project so the value is compiled into the Vite bundle.
-3. Open the public Vercel domain, upload a clear paddy leaf image, and check for a dataset class label, confidence, approximate severity/affected-area percentage, and a disease-specific advisory with links when a verified TNAU source exists. If confidence is below the configured threshold, the app must abstain.
-4. Confirm the browser's network panel shows a successful `POST` to the Render `/api/predict` endpoint and that Render's `/api/health` reports `model_ready: true`.
+Replace project, GitHub owner/repository, and Vercel origin values. For private model hosting, configure `MODEL_URL` and `MODEL_DOWNLOAD_TOKEN` through Secret Manager/Cloud Run secrets instead of command-line environment arguments. The instance uses one request at a time to bound inference memory and scales to zero. Cloud Run's local SQLite is also ephemeral; set Supabase secrets if history persistence is required.
 
-The workspace has passed a local model-backed upload smoke test, but no public image upload or live Vercel/Render deployment can be verified until you complete these account steps. The app's history is shared among visitors (there is no user sign-in or per-user isolation); use Supabase only if this shared-history behavior is acceptable. Production history deletion is protected by the Render-generated `HISTORY_ADMIN_TOKEN`; the dashboard asks for that token before clearing the shared history.
+After deploy, copy the service URL printed by `gcloud` and verify `/healthz`, `/readyz`, and `/api/health` until model readiness is true. The Cloud Run API is not publicly verified until these checks pass.
+
+## 5. Deploy the React frontend on Vercel
+
+1. Import the GitHub repository into Vercel, set **Root Directory** to `frontend`, framework **Vite**, Node `22.x`, build command `npm run build`, output `dist`.
+2. Set `VITE_API_BASE_URL` to the deployed backend URL plus `/api`, for example `https://paddyguard-api-abc.a.run.app/api`. This is compiled into the frontend, so redeploy after changing it.
+3. Set the backend's `CORS_ORIGINS` to the Vercel production origin, then redeploy the backend if you changed it.
+4. Upload a clear labeled-field paddy leaf image and check the browser Network panel for a successful `POST /api/predict`. Verify the disease class, confidence, severity percentage/label and advisory source links. A low-confidence response must abstain.
+
+Vercel frontend configuration is in `frontend/vercel.json`. No deployed image upload has been claimed or verified from this local workspace; that final end-to-end check requires the user's hosting accounts and public service URLs. Keep in mind Render Free can sleep and loses SQLite data; Cloud Run can also scale to zero and its local filesystem is disposable.

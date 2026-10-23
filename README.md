@@ -25,7 +25,7 @@ The API also serves the built frontend when `frontend/dist` exists. For producti
 
 ## Public deployment
 
-See [DEPLOYMENT.md](DEPLOYMENT.md) for the GitHub, Vercel, and Render steps, model release/checksum setup, CORS, production environment variables, and post-deployment upload verification. The project is prepared for deployment but has not been published to public accounts.
+See [DEPLOYMENT.md](DEPLOYMENT.md) for free-tier deployment steps, model release/checksum setup, CORS, production environment variables, and post-deployment upload verification. `render.yaml` uses Render Free. A local CPU inference smoke test measured 316 MiB peak process working set on Windows against Render's 512 MiB limit; the remaining headroom and Render's 0.1 CPU are limited, so the deployment guide also gives a 1 GiB Cloud Run option that stays within its published monthly free allowance if usage stays below the limits (billing account required). Neither host has been deployed from this workspace.
 
 ## Features and limits
 

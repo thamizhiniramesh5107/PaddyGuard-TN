@@ -2,7 +2,7 @@ services:
   - type: web
     name: paddyguard-api
     runtime: python
-    plan: standard
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT --workers 1
     healthCheckPath: /readyz
@@ -29,6 +29,14 @@ services:
       - key: ABSTAIN_THRESHOLD
         value: "0.55"
       - key: TORCH_NUM_THREADS
+        value: "1"
+      - key: OMP_NUM_THREADS
+        value: "1"
+      - key: MKL_NUM_THREADS
+        value: "1"
+      - key: OPENBLAS_NUM_THREADS
+        value: "1"
+      - key: OPENCV_FOR_THREADS_NUM
         value: "1"
       - key: SUPABASE_URL
         sync: false
